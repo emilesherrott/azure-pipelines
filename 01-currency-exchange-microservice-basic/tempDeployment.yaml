@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    # linked with the service via the service's 'spec > selector'
+    app: currency-exchange
+  name: currency-exchange
+  namespace: default
+spec:
+  replicas: 2
+  # min time before rolling next new pod
+  # give pods change to load container and run
+  minReadySeconds: 45
+  selector:
+    matchLabels:
+      # linked our deployment to pods through deployments ...
+      # 'spec > template > metadata > labels' 
+      app: currency-exchange
+  # new release strategy
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  # relating to pods and containers on deployment
+  template:
+    metadata:
+      labels:
+        # linked with deployment through deployments...
+        # 'spec > selecotr > matchlabels'
+        app: currency-exchange
+    spec:
+      # container to load into pod
+      containers:
+      - name: currency-exchange
+        # path to image
+        image: in28min/currency-exchange:0.0.1-RELEASE
+        imagePullPolicy: IfNotPresent
+        # port defined on container
+        ports:
+        - name: liveness-port
+          containerPort: 8000
+        resources: 
+          # start container with these resources
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          # limit the container to these resources
+          limits:
+            cpu: 500m
+            memory: 1024Mi #256Mi 
+        # send request to this endpoint when started before accepting...
+        # requests 
+        readinessProbe:
+          httpGet:
+            path: /
+            port: liveness-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+        # restart container after launched if request failed 5 times
+        livenessProbe:
+          httpGet:
+            path: /
+            port: liveness-port
+          failureThreshold: 5
+          periodSeconds: 10
+          initialDelaySeconds: 60
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels: #PODS
+    app: currency-exchange
+  name: currency-exchange
+  namespace: default
+spec:
+  ports:
+  - # nodePort: 30702 #CHANGE
+    port: 8000 
+    protocol: TCP
+    targetPort: 8000 
+  selector:
+    # linked with the deployment via the deployments 'metadata > labels'  
+    app: currency-exchange
+  sessionAffinity: None 
+  type: NodePort
