@@ -14,6 +14,7 @@ stages:
   jobs: 
   - job: FirstJob
     steps: 
+    - bash: echo Build / FirstJob
     - bash: echo $(PipelineLevelVariable)
   - job: SecondJob
     steps:
