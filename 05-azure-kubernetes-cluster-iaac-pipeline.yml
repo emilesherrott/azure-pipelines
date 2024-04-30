@@ -7,6 +7,13 @@ pool:
 steps:
 - script: echo K8S Terraform Azure!
   displayName: 'Run a one-line script'
+
+- task: DownloadSecureFile@1
+  name: publickey
+  inputs:
+    secureFile: 'azure_rsa.pub'
+
+
 - task: TerraformCLI@2
   inputs:
     command: 'init'
@@ -24,7 +31,12 @@ steps:
     allowTelemetryCollection: true
   displayName: 'terraform init'
 
-- task: DownloadSecureFile@1
-  name: publickey
+
+- task: TerraformCLI@2
   inputs:
-    secureFile: 'azure_rsa.pub'
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    environmentServiceName: 'azure-resource-manager-service-connection'
+    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
+    allowTelemetryCollection: true
+  displayName: 'terraform apply'
