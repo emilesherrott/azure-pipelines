@@ -6,7 +6,7 @@ metadata:
   name: currency-exchange
   namespace: default
 spec:
-  replicas: 1 #CHANGE
+  replicas: 1
   minReadySeconds: 45
   selector:
     matchLabels:
@@ -23,18 +23,18 @@ spec:
     spec:
       containers:
       - name: currency-exchange
-        image: in28min/currency-exchange-devops
+        image: emilesherrott/currency-exchange-devops
         imagePullPolicy: IfNotPresent
         ports:
         - name: liveness-port
           containerPort: 8000
-        resources: #CHANGE
+        resources: 
           requests:
             cpu: 100m
             memory: 512Mi
           limits:
             cpu: 500m
-            memory: 1024Mi #256Mi 
+            memory: 1024Mi 
         readinessProbe:
           httpGet:
             path: /
@@ -55,17 +55,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  labels: #PODS
+  labels: 
     app: currency-exchange
   name: currency-exchange
   namespace: default
 spec:
   ports:
-  - # nodePort: 30702 #CHANGE
-    port: 8000 #CHANGE
+    port: 8000 
     protocol: TCP
-    targetPort: 8000 #CHANGE
+    targetPort: 8000 
   selector:
     app: currency-exchange
-  sessionAffinity: None #CHANGE
+  sessionAffinity: None 
   type: LoadBalancer

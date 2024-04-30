@@ -5,8 +5,8 @@ resources:
 - repo: self
 
 variables:
-  # tag: '$(Build.BuildId)'
-  tag: 188
+  tag: '$(Build.BuildId)'
+  # tag: 188
 
 stages:
 - stage: Build
@@ -17,14 +17,14 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-    # - task: Docker@2
-    #   displayName: Build Image
-    #   inputs:
-    #     containerRegistry: 'emilesherrott-docker-hub'
-    #     repository: 'emilesherrott/currency-exchange-devops'
-    #     command: 'buildAndPush'
-    #     Dockerfile: '**/Dockerfile'
-    #     tags: '$(tag)'
+    - task: Docker@2
+      displayName: Build Image
+      inputs:
+        containerRegistry: 'emilesherrott-docker-hub'
+        repository: 'emilesherrott/currency-exchange-devops'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: '$(tag)'
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
