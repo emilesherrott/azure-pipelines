@@ -50,12 +50,7 @@ module "lfacademy-cluster" {
       desired_size   = 3
     }
   }
-  cluster_encryption_config = [
-    {
-      provider_key_arn = "arn:aws:kms:us-east-1:725625542800:key/f238a94b-d65e-49d3-a247-b4ec71ce3988"
-      resources        = ["secrets"]
-    }
-  ]
+  kms_key_aliases = [ "arn:aws:kms:us-east-1:725625542800:key/f238a94b-d65e-49d3-a247-b4ec71ce3988" ]
 }
 
 
