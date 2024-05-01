@@ -54,13 +54,13 @@ module "lfacademy-cluster" {
 
 
 
-data "aws_eks_cluster" "cluster" {
-  name = "lfacademy-cluster"
-}
+# data "aws_eks_cluster" "cluster" {
+#   name = "lfacademy-cluster"
+# }
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = "lfacademy-cluster"
-}
+# data "aws_eks_cluster_auth" "cluster" {
+#   name = "lfacademy-cluster"
+# }
 
 
 
