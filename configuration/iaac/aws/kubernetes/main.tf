@@ -36,7 +36,7 @@ module "lfacademy-cluster" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = "lfacademy-cluster"
   cluster_version = "1.28"
-  subnet_ids      = ["subnet-0caae72f8762e71fd", "subnet-0993ca89727152b5f"]
+  subnet_ids      = ["subnet-0caae72f8762e71fd", "subnet-0993ca89727152b5f", "subnet-0dc83f0a90e6341d2"]
   #subnet_ids = data.aws_subnet_ids.subnets.ids
   vpc_id                         = aws_default_vpc.default.id
   cluster_endpoint_public_access = true
