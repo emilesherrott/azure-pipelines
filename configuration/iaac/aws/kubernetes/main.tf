@@ -55,11 +55,11 @@ module "lfacademy-cluster" {
 
 
 data "aws_eks_cluster" "cluster" {
-  name = module.lfacademy-cluster.cluster_id
+  name = module.lfacademy-cluster.id
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = module.lfacademy-cluster.cluster_id
+  name = module.lfacademy-cluster.id
 }
 
 
