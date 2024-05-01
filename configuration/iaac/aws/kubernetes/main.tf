@@ -53,6 +53,7 @@ module "lfacademy-cluster" {
   cluster_encryption_config = [
     {
       provider_key_arn = "arn:aws:kms:us-east-1:725625542800:key/f238a94b-d65e-49d3-a247-b4ec71ce3988"
+      resources        = ["secrets"]
     }
   ]
 }
