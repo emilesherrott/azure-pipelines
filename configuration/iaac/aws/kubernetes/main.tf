@@ -45,9 +45,9 @@ module "lfacademy-cluster" {
   eks_managed_node_groups = {
     default = {
       instance_types = ["t2.micro"]
-      min_size       = 1
-      max_size       = 10
-      desired_size   = 1
+      min_size       = 3
+      max_size       = 5
+      desired_size   = 3
     }
   }
 }
