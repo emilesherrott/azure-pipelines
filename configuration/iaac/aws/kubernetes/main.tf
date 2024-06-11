@@ -1,4 +1,4 @@
-# arn:aws:s3:::terraform-backend-state-emilesherrott
+arn:aws:s3:::terraform-backend-state-emilesherrott
 
 terraform {
   required_providers {
@@ -25,18 +25,11 @@ data "aws_subnets" "subnets" {
   }
 }
 
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-}
-
-
 module "lfacademy-cluster" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = "lfacademy-cluster"
   cluster_version = "1.28"
-  subnet_ids      = ["subnet-0caae72f8762e71fd", "subnet-0dc83f0a90e6341d2"]
+  subnet_ids      = ["subnet-0caae72f8762e71fd", "subnet-0993ca89727152b5f", "subnet-0dc83f0a90e6341d2"]
   #subnet_ids = data.aws_subnet_ids.subnets.ids
   vpc_id                         = aws_default_vpc.default.id
   cluster_endpoint_public_access = true
@@ -45,42 +38,46 @@ module "lfacademy-cluster" {
   eks_managed_node_groups = {
     default = {
       instance_types = ["t2.micro"]
-      min_size       = 3
-      max_size       = 5
-      desired_size   = 3
+      min_size       = 1
+      max_size       = 10
+      desired_size   = 1
     }
   }
-  # kms_key_aliases = [ "arn:aws:kms:us-east-1:725625542800:key/f238a94b-d65e-49d3-a247-b4ec71ce3988" ]
-  kms_key_aliases = [ "alias/eks/lfacademy-cluster" ]
 }
 
+# provider "kubernetes" {
+  # host                   = data.aws_eks_cluster.cluster.endpoint
+  # cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  # token                  = data.aws_eks_cluster_auth.cluster.token
+# }
 
 
-data "aws_eks_cluster" "cluster" {
-  name = "lfacademy-cluster"
-}
+# data "aws_eks_cluster" "cluster" {
+#   name = "lfacademy-cluster"
+# }
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = "lfacademy-cluster"
-}
+# data "aws_eks_cluster_auth" "cluster" {
+#   name = "lfacademy-cluster"
+# }
 
 
 
-resource "kubernetes_cluster_role_binding" "example" {
-  metadata {
-    name = "fabric8-rbac"
-  }
-  role_ref {
-    api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
-  }
-  subject {
-    kind      = "ServiceAccount"
-    name      = "default"
-    namespace = "default"
-  }
-}
+
+# resource "kubernetes_cluster_role_binding" "example" {
+#   metadata {
+#     name = "fabric8-rbac"
+#   }
+#   role_ref {
+#     api_group = "rbac.authorization.k8s.io"
+#     kind      = "ClusterRole"
+#     name      = "cluster-admin"
+#   }
+#   subject {
+#     kind      = "ServiceAccount"
+#     name      = "default"
+#     namespace = "default"
+#   }
+# }
 
 
 provider "aws" {
